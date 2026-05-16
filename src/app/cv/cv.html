@@ -1,0 +1,153 @@
+<div class="builder">
+
+  <!-- Top bar -->
+  <div class="builder__bar">
+    <div class="builder__brand">
+      <span class="builder__icon">📄</span>
+      <span class="builder__title">CV Builder</span>
+    </div>
+    <div class="builder__tabs">
+      <button [class.active]="activeTab==='edit'"    (click)="activeTab='edit'">✏️ Edit</button>
+      <button [class.active]="activeTab==='preview'" (click)="activeTab='preview'">👁 Preview</button>
+    </div>
+    <button class="builder__print" onclick="window.print()">⬇ Download / Print</button>
+  </div>
+
+  <div class="builder__body">
+
+    <!-- Edit panel -->
+    <aside class="edit-panel" [class.hidden]="activeTab==='preview'">
+      <div class="edit-section">
+        <h4>Personal Info</h4>
+        <label>Full Name <input [(ngModel)]="personalInfo.name" /></label>
+        <label>Job Title <input [(ngModel)]="personalInfo.title" /></label>
+        <label>Email <input [(ngModel)]="personalInfo.email" type="email" /></label>
+        <label>Phone <input [(ngModel)]="personalInfo.phone" /></label>
+        <label>Location <input [(ngModel)]="personalInfo.location" /></label>
+        <label>Portfolio <input [(ngModel)]="personalInfo.portfolio" /></label>
+        <label>GitHub <input [(ngModel)]="personalInfo.github" /></label>
+      </div>
+      <div class="edit-section">
+        <h4>Summary</h4>
+        <textarea [(ngModel)]="summary" rows="5"></textarea>
+      </div>
+      <div class="edit-section">
+        <h4>Experience</h4>
+        <div class="edit-card" *ngFor="let job of experience">
+          <label>Title <input [(ngModel)]="job.position" /></label>
+          <label>Company <input [(ngModel)]="job.company" /></label>
+          <label>Duration <input [(ngModel)]="job.duration" /></label>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Preview panel -->
+    <div class="preview-panel" [class.full]="activeTab==='preview'">
+      <div class="cv" id="cv-output">
+
+        <!-- Header -->
+        <header class="cv__header">
+          <div class="cv__header-left">
+            <h1 class="cv__name">{{ personalInfo.name }}<span class="cv__dot">.</span></h1>
+            <p class="cv__title">{{ personalInfo.title }}</p>
+            <div class="cv__contacts">
+              <a [href]="'mailto:'+personalInfo.email" class="cv__contact">✉ {{ personalInfo.email }}</a>
+              <span class="cv__contact">✆ {{ personalInfo.phone }}</span>
+              <a [href]="personalInfo.portfolio" target="_blank" class="cv__contact">◉ Portfolio</a>
+              <a [href]="personalInfo.github" target="_blank" class="cv__contact">⊕ GitHub</a>
+              <span class="cv__contact">⌖ {{ personalInfo.location }}</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Summary -->
+        <section class="cv__section">
+          <div class="cv__label">Profile</div>
+          <div class="cv__rule"></div>
+          <p class="cv__summary">{{ summary }}</p>
+        </section>
+
+        <!-- Skills -->
+        <section class="cv__section">
+          <div class="cv__label">Skills</div>
+          <div class="cv__rule"></div>
+          <div class="cv__skills-core">
+            <span *ngFor="let s of coreSkills" class="cv__skill-pill">{{ s }}</span>
+          </div>
+          <p class="cv__skills-also">
+            <strong>Also:</strong> {{ alsoSkills.join(' · ') }}
+          </p>
+        </section>
+
+        <!-- Experience -->
+        <section class="cv__section">
+          <div class="cv__label">Experience</div>
+          <div class="cv__rule"></div>
+          <div class="cv__exp" *ngFor="let job of experience">
+            <div class="cv__exp-header">
+              <div>
+                <span class="cv__exp-title">{{ job.position }}</span>
+                <span class="cv__exp-company"> · {{ job.company }}</span>
+              </div>
+              <span class="cv__exp-date">{{ job.duration }}</span>
+            </div>
+            <ul class="cv__bullets">
+              <li *ngFor="let r of job.responsibilities">{{ r }}</li>
+            </ul>
+            <div class="cv__tags">
+              <span *ngFor="let t of job.tags" class="cv__tag">{{ t }}</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Projects -->
+        <section class="cv__section">
+          <div class="cv__label">Projects</div>
+          <div class="cv__rule"></div>
+          <div class="cv__project" *ngFor="let p of projects">
+            <div class="cv__project-header">
+              <span class="cv__project-name">{{ p.name }}</span>
+              <span *ngIf="p.badge" class="cv__badge"
+                [ngClass]="{'badge-ai': p.badge==='AI', 'badge-py': p.badge==='PY', 'badge-ts': p.badge==='TS'}">
+                {{ p.badge }}
+              </span>
+              <span class="cv__project-stack">{{ p.technologies.join(' · ') }}</span>
+              <a *ngIf="p.link" [href]="p.link" target="_blank" class="cv__project-link">↗</a>
+            </div>
+            <p class="cv__project-desc">{{ p.description }}</p>
+          </div>
+        </section>
+
+        <!-- Education -->
+        <section class="cv__section">
+          <div class="cv__label">Education</div>
+          <div class="cv__rule"></div>
+          <div class="cv__edu" *ngFor="let e of education">
+            <div class="cv__edu-header">
+              <span class="cv__edu-degree">{{ e.degree }}</span>
+              <span class="cv__edu-year">{{ e.year }}</span>
+            </div>
+            <span class="cv__edu-inst">{{ e.institution }}</span>
+          </div>
+        </section>
+
+        <!-- Certifications -->
+        <section class="cv__section">
+          <div class="cv__label">Certifications</div>
+          <div class="cv__rule"></div>
+          <div class="cv__certs-grid">
+            <div class="cv__cert" *ngFor="let c of certifications">
+              <span class="cv__cert-dot"></span>
+              <div>
+                <span class="cv__cert-name">{{ c.name }}</span>
+                <span class="cv__cert-issuer"> · {{ c.issuer }} · {{ c.date }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+  </div>
+</div>
